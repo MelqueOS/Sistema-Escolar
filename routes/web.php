@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TurmaController;
+use App\Http\Controllers\AlunoController;
+use App\Http\Controllers\NotaController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::resources([
+	"turma" => TurmaController::Class,
+	"aluno" => AlunoController::Class,
+	"nota" => NotaController::Class,
+	"home" => HomeController::Class
+]);
 
 Route::get('/', function () {
     return view('welcome');
