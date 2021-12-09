@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Nota;
+use App\Models\Turma;
+use App\Models\Aluno;
+use Illuminate\Support\Facades\DB;
 
 class NotaController extends Controller
 {
@@ -13,7 +17,16 @@ class NotaController extends Controller
      */
     public function index()
     {
-        return view("sistema-escolar.nota.nota");
+		$turmas = Turma::All();
+		$habilitado = False;
+		$escolhida = new Turma();
+        return view("sistema-escolar.nota.nota",
+			[
+				"turmas" => $turmas,
+				"habilitado" => $habilitado,
+				"escolhida" => $escolhida
+			]
+		);
     }
 
     /**
@@ -21,9 +34,22 @@ class NotaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+		$escolhida = Turma::Find($request->get("turma"));
+		$turmas = Turma::All();
+		$habilitado = true;
+		$alunos = DB::table("aluno")->where("turma_id", "=",$request->get("turma"))->get();
+		$notas = Nota::All();
+		return view("sistema-escolar.nota.nota",
+			[
+				"turmas" => $turmas,
+				"escolhida" => $escolhida,
+				"habilitado" => $habilitado,
+				"alunos" => $alunos,
+				"notas" => $notas
+			]
+		);
     }
 
     /**
@@ -34,7 +60,21 @@ class NotaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+		$status = "salvo";
+		//dd($request);
+		$data = []; // Criando um array vazio
+		for ($i = 0; $i < count($request['conte']); $i++) {
+			if($request["id"][$i] != ""){
+				$nota = Nota::Find($request["id"][$i]);
+			}else{
+				$nota = new Nota();
+			}
+			$nota->aluno_id = $request["aluno_id"][$i];
+			$nota->valor = $request["valor"][$i];
+			$nota->save();
+		}		
+		$request>session()->flash("status", $status);
+		return redirect("/nota");
     }
 
     /**

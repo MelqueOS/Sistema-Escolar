@@ -24,9 +24,14 @@
 				<strongs>Excluido com sucesso</strongs>
 			</div>
 			@endif
-		
+			@if(Session::get("status") == "erro_exc")
+			<div class = "alert alert-error" role = "alert"> 
+				<strongs>Não foi possivel exluir o item. Existem elementos que dependem dele</strongs>
+			</div>
+			@endif
+			
+			@yield("extra")
 			@yield("cadastro")
 			@yield("listagem")
-			@yield("extra")
 	</body>
 </html>

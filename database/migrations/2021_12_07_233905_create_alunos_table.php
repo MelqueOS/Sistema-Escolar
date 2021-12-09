@@ -13,7 +13,7 @@ class CreateAlunosTable extends Migration
      */
     public function up()
     {
-        Schema::create('alunos', function (Blueprint $table) {
+        Schema::create('aluno', function (Blueprint $table) {
             $table->id();
 			$table->String("nome_aluno", 100);
 			$table->String("email", 30);
@@ -21,7 +21,7 @@ class CreateAlunosTable extends Migration
 			
 			//Foreign Key com turma
 			$table->foreignId("turma_id");
-		   $table->foreign("turma_id")->references("id")->on("turmas");
+		    $table->foreign("turma_id")->references("id")->on("turma");
             $table->timestamps();
         });
     }

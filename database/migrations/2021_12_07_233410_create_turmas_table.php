@@ -13,10 +13,10 @@ class CreateTurmasTable extends Migration
      */
     public function up()
     {
-        Schema::create('turmas', function (Blueprint $table) {
+        Schema::create('turma', function (Blueprint $table) {
             $table->id();
-			$table->String("nome_turma", 100);
-			$table->String("nome_curso", 100);
+			$table->string("nome_turma", 100);
+			$table->string("nome_curso", 100);
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateTurmasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('turmas');
+        Schema::dropIfExists('turma');
     }
 }

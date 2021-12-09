@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Aluno;
 use Illuminate\Http\Request;
-
+use App\Models\Turma;
 class AlunoController extends Controller
 {
     /**
@@ -12,8 +12,18 @@ class AlunoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return view("sistema-escolar.aluno.aluno");
+    {	
+		$turmas = Turma::All();
+		$aluno = new Aluno();
+		$alunos = Aluno::All();
+		return view(
+			"sistema-escolar.aluno.aluno",
+			[
+				"aluno" => $aluno,
+				"alunos" => $alunos,
+				"turmas" => $turmas
+			]
+		);
     }
 
     /**
@@ -34,7 +44,20 @@ class AlunoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if ($request->get('id')!=""){
+			$aluno = Aluno::Find($request->get('id'));
+			$status = "atualizado";
+		}else{
+			$aluno = new Aluno();
+			$status = "salvo";
+		}
+		$aluno->nome_aluno = $request->get("nome_aluno");
+		$aluno->email = $request->get("email");
+		$aluno->matricula = $request->get("matricula");
+		$aluno->turma_id = $request->get("turma_id");
+		$aluno->save();
+		$request>session()->flash("status", $status);
+		return redirect("/aluno");
     }
 
     /**
@@ -56,7 +79,17 @@ class AlunoController extends Controller
      */
     public function edit($id)
     {
-        //
+		$turmas = Turma::All();
+        $aluno = Aluno::Find($id);
+		$alunos = Aluno::All();
+		return view(
+			"sistema-escolar.aluno.aluno",
+			[
+				"aluno" => $aluno,
+				"alunos" => $alunos,
+				"turmas" => $turmas
+			]
+		);
     }
 
     /**
@@ -77,8 +110,21 @@ class AlunoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        //
+        $aluno = Aluno::Find($id);
+		/*
+		$notas = DB::table('nota')->where("aluno_id", "=",$id)->count();
+		if($notas > 0){
+			$status = "erro_exc";
+		}else{
+			$aluno->delete();
+			$status = "excluido";
+		}
+		*/
+		$aluno->delete();
+		$status = "excluido";
+		$request>session()->flash("status", $status);
+		return Redirect("/aluno");
     }
 }

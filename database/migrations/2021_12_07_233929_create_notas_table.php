@@ -13,13 +13,13 @@ class CreateNotasTable extends Migration
      */
     public function up()
     {
-        Schema::create('notas', function (Blueprint $table) {
+        Schema::create('nota', function (Blueprint $table) {
             $table->id();
 			$table->integer("valor");
 		
 			//Foreign Key com aluno
 			$table->foreignId("aluno_id");
- 	        $table->foreign("aluno_id")->references("id")->on("alunos");
+ 	        $table->foreign("aluno_id")->references("id")->on("aluno");
             $table->timestamps();
         });
     }
