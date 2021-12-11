@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Aluno;
 use Illuminate\Http\Request;
 use App\Models\Turma;
+use Illuminate\Support\Facades\DB;
 class AlunoController extends Controller
 {
     /**
@@ -113,7 +114,7 @@ class AlunoController extends Controller
     public function destroy($id, Request $request)
     {
         $aluno = Aluno::Find($id);
-		/*
+		
 		$notas = DB::table('nota')->where("aluno_id", "=",$id)->count();
 		if($notas > 0){
 			$status = "erro_exc";
@@ -121,9 +122,11 @@ class AlunoController extends Controller
 			$aluno->delete();
 			$status = "excluido";
 		}
-		*/
+		
+		/*
 		$aluno->delete();
 		$status = "excluido";
+		*/
 		$request>session()->flash("status", $status);
 		return Redirect("/aluno");
     }

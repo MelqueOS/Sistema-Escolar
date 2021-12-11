@@ -2,9 +2,9 @@
 @section("titulo", "Notas")
 @section("extra")
 	<form method="GET" action="/nota/create">
-        <div class="">
-			<label class="">Turmas</label>
-			<select id = "selecaoTurma" class="" name = "turma"  onchange="this.form.submit()">
+        <div class="col-6">
+			<label class="h3">Turmas</label>
+			<select id = "selecaoTurma" class="form-select" name = "turma"  onchange="this.form.submit()">
 				<option value = "" selected = "selected">Selecione uma turma</option>
 				@foreach($turmas as $turma)
 					@if($turma->id == $escolhida->id)
@@ -25,12 +25,12 @@
 	<form method="POST" action="/nota">
         <div class="" >
 			<div class="">
-				<label class="">Turma: {{$escolhida->nome_turma}}</label>
+				<label class="h5">Turma: {{$escolhida->nome_turma}}</label>
 			</div>
 			@foreach($alunos as $aluno)
             <div class="">
-					<label for="campoAluno">Aluno</label>
-					<input type="text" id="campoAluno" name="nome_aluno" class=""  value = "{{$aluno->nome_aluno}}" disabled="" required/>
+					<label for="campoAluno" class = "h5">Aluno</label>
+					<input type="text" id="campoAluno" name="nome_aluno" class="h6 col-2"  value = "{{$aluno->nome_aluno}}" disabled="" required/>
 					<input type = "hidden" name = 'aluno_id[]' value = "{{$aluno->id}}"/>
 					<?php 
 						$not = false;
@@ -38,7 +38,7 @@
 						$iv = 0;
 					?>
 					
-					<label for="campoNota">Nota</label>
+					<label for="campoNota" class="h5">Nota</label>
 					@foreach($notas as $nota)
 						@if($aluno->id == $nota->aluno_id)
 							<?php 
@@ -59,7 +59,7 @@
             </div>
 			@endforeach
         </div>
-        <button type="submit" class="">Salvar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
         @csrf
     </form>
 	@else

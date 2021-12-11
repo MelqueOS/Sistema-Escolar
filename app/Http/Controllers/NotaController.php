@@ -17,6 +17,11 @@ class NotaController extends Controller
      */
     public function index()
     {
+		/*
+		Aqui é carregado um formulario simples com um select com todas as turmas cadastradas
+		É passado uma variavel booleana que desabilita o formulario de notas, 
+		A principio é passado uma turma vazia como a escolhida
+		*/
 		$turmas = Turma::All();
 		$habilitado = False;
 		$escolhida = new Turma();
@@ -36,20 +41,34 @@ class NotaController extends Controller
      */
     public function create(Request $request)
     {
-		$escolhida = Turma::Find($request->get("turma"));
-		$turmas = Turma::All();
-		$habilitado = true;
-		$alunos = DB::table("aluno")->where("turma_id", "=",$request->get("turma"))->get();
-		$notas = Nota::All();
-		return view("sistema-escolar.nota.nota",
-			[
-				"turmas" => $turmas,
-				"escolhida" => $escolhida,
-				"habilitado" => $habilitado,
-				"alunos" => $alunos,
-				"notas" => $notas
-			]
-		);
+		/*
+			Aproveitei esse metodo para fazer o retorno para a pagina com os dados de edição
+			Aqui serão retornados os dados referentes a turma escolhida, os alunos pertencente a essa turma e 
+			e as notas existentes
+			É passado uma variavel booleano que habilita o formulario de notas
+			No formulario de notas sera verificado se o aluno tem ou não nota cadastrada para a materia escolhida,
+			se o aluno tiver nota é habilitado um campo para edição com a nota atual, do contrario é habilitado
+			um campo vazio para adicionar a nota. Assim é possivel listar, submeter formularios para criar e atualiza notas antigas (ou manter), tudo ao mesmo tempo e no mesmo formulario 			
+			
+		*/
+		if($request->get("turma") != ""){
+			$escolhida = Turma::Find($request->get("turma"));
+			$turmas = Turma::All();
+			$habilitado = true;
+			$alunos = DB::table("aluno")->where("turma_id", "=",$request->get("turma"))->get();
+			$notas = Nota::All();
+			return view("sistema-escolar.nota.nota",
+				[
+					"turmas" => $turmas,
+					"escolhida" => $escolhida,
+					"habilitado" => $habilitado,
+					"alunos" => $alunos,
+					"notas" => $notas
+				]
+			);
+		}else{
+			return redirect("/nota");
+		}
     }
 
     /**
@@ -62,7 +81,12 @@ class NotaController extends Controller
     {
 		$status = "salvo";
 		//dd($request);
-		$data = []; // Criando um array vazio
+		/*
+		É recebido um array com todos as notas, IDs de alunos e IDs de notas
+		É verificado para cada id de nota se a nota ja existe
+		Se existir é buscado os valores anteriores e atualizados pelos novos
+		Se não existir é criado uma nova nota no banco
+		*/
 		for ($i = 0; $i < count($request['conte']); $i++) {
 			if($request["id"][$i] != ""){
 				$nota = Nota::Find($request["id"][$i]);
